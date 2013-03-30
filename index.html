@@ -30,9 +30,6 @@
 <script type="text/javascript" src="script/include.js"></script>
 <script type="text/javascript">
 
-var hsv = rgb2hsv(255,255,255);
-console.log(hsv[0] + " | " + hsv[1] + " | " + hsv[2]);
-
 var scale = 4;
 var canvas = $("#display")[0];
 var ctx = canvas.getContext("2d");
@@ -44,15 +41,32 @@ function Tracker() {
 	var _this = this;
 	
 	var hsv = [144, 99, 17];
-	var tol = [15, 10, 20];
+	var tol = [40, 15, 100];
 
 	function mask() {
-		var hsv;
+		var p;
 		var data = pbuff.data;
 		
-		for(var i=pbuff.length-4; i >= 0; i-=4) {
-			hsv = rgb2hsv(data[i], data[i+1], data[i+2]);
+		for(var i=data.length-4; i >= 0; i-=4) {
+			p = rgb2hsv(data[i], data[i+1], data[i+2]);
+			
+			if(hsv[0] - tol[0] < p[0] && p[0] < hsv[0] + tol[0] &&
+			   hsv[1] - tol[1] < p[1] && p[1] < hsv[1] + tol[1] &&
+			   hsv[2] - tol[2] < p[2] && p[2] < hsv[2] + tol[2]) {
+				data[i] = 0;
+				data[i+1] = 255;
+			    data[i+2] = 0;
+			    data[i+3] = 255;
+			}
+			else {
+				data[i] = 255;
+				data[i+1] = 255;
+				data[i+2] = 255;
+				data[i+3] = 255;
+			}
 		}
+		
+		ctx.putImageData(pbuff, 0, 0);
 	}
 
 	function sample(buff, x, y) {
@@ -84,7 +98,6 @@ function Tracker() {
 		sumb /= szsq;
 		
 		var hsv = rgb2hsv(sumr,sumg,sumb);
-		console.log("<" + hsv.join(",") + ">");
 	}
 
 	function process() {
@@ -95,7 +108,6 @@ function Tracker() {
 		
 		pbuff = cap.captureImageData(cap.width() / scale, cap.height() / scale);
 		
-		color();
 		mask();
 		
 		setTimeout(function() {
