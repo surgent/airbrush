@@ -34,9 +34,9 @@ function rgb2hsv (r,g,b) {
             h -= 1;
         }
     }
-    return {
-        h: Math.round(h * 360),
-        s: Math.round(s * 100),
-        v: Math.round(v * 100)
-    };
+    return [
+    	Math.round(h * 360),
+        Math.round(s * 100),
+        Math.round(v * 100)
+    ];
 }
