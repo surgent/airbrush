@@ -14,6 +14,11 @@
 		width: 100%;
 		height: 100%;
 		background-color: #000;
+		transform: matrix(-1,0,0,1,0,0);
+		-o-transform: matrix(-1,0,0,1,0,0);
+		-ms-transform: matrix(-1,0,0,1,0,0);
+		-moz-transform: matrix(-1,0,0,1,0,0);
+		-webkit-transform: matrix(-1,0,0,1,0,0);
 	}
 </style>
 
@@ -22,7 +27,74 @@
 
 <canvas id="display"></canvas>
 
-<script type="text/javascript"></script>
+<script type="text/javascript" src="script/include.js"></script>
+<script type="text/javascript">
+
+var hsv = rgb2hsv(255,255,255);
+console.log(hsv.h + " | " + hsv.s + " | " + hsv.v);
+
+var scale = 4;
+var canvas = $("#display")[0];
+var ctx = canvas.getContext("2d");
+
+var pbuff;
+
+function Tracker() {
+	var cap;
+	this.onframe = null;
+	var _this = this;
+
+	function mask() {
+		var hsv;
+		var data = pbuff.data;
+		
+		for(var i=pbuff.length-4; i >= 0; i-=4) {
+			hsv = rgb2hsv(data[i], data[i+1], data[i+2]);
+		}
+	}
+
+	function process() {
+		cap.captureContext2d(ctx);
+		
+		if(_this.onframe)
+			_this.onframe(cap);
+		
+		pbuff = cap.captureImageData(cap.width() / scale, cap.height() / scale);
+		
+		mask();
+		
+		setTimeout(function() {
+			window.requestAnimationFrame(process);
+			},50
+		);
+	}
+
+	this.init=function() {
+		cap = new cam.Capture();
+		cap.start(function(cap) {
+    		if(cap) {
+    			canvas.width = cap.width();
+    			canvas.height = cap.height();
+        		process();
+        	}
+		});
+	}
+	
+	this.getCap = function() {
+		return cap;
+	}
+}
+
+var track = new Tracker();
+track.init();
+track.onframe=function(cap) {
+	var cx = cap.width() >> 1;
+	var cy = cap.height() >> 1;
+
+	ctx.strokeRect(cx - 50, cy - 50, 100, 100);
+}
+
+</script>
 
 </body>
 </html>
