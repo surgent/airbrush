@@ -1,5 +1,6 @@
 var includes = [
-    "cam"
+    "cam",
+	"Tracker"
 ];
 
 for(var include in includes)
