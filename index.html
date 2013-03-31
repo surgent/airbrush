@@ -33,30 +33,42 @@
 var canvas = $("#display")[0];
 var ctx = canvas.getContext("2d");
 var cap;
+var pts = [];
 
 var track = new Tracker();
 track.init(function() {
+	track.setTracking(true);
 	cap = track.getCap();
 	canvas.width = cap.width();
 	canvas.height = cap.height();
 
 	track.onframe=function(cap) {	
-		cap.captureContext2d(ctx);
-
 		var cx = cap.width() >> 1;
 		var cy = cap.height() >> 1;
 
-		ctx.strokeRect(cx - 50, cy - 50, 100, 100);
+		ctx.save();
+			cap.captureContext2d(ctx);
+			ctx.globalAlpha = 0.5;
+			ctx.fillRect(0, 0, canvas.width, cy - 50);
+			ctx.fillRect(0, cy-50, cx- 50, 100);
+			ctx.fillRect(0, cy+50, canvas.width, cy - 50);
+			ctx.fillRect(cx + 50, cy-50, cx- 50, 100);
+		ctx.restore();
 		
-		var pts = track.getPoints();
+		pts = pts.concat(track.getPoints());
 
-		for(var i=0; i<pts.length; ++i) {
-			ctx.save();
-				ctx.fillStyle="#09f";
-				ctx.arc(pts[i].x, pts[i].y, 8, 0, 2*Math.PI, false);
-				ctx.fill();
-			ctx.restore();
-		}
+		ctx.save();
+			ctx.strokeStyle="#09f";
+			ctx.beginPath();
+			
+			if(pts.length > 0)
+				ctx.moveTo(pts[0].x, pts[0].y);
+				
+			for(var i=1; i<pts.length; ++i)
+				ctx.lineTo(pts[i].x, pts[i].y);
+					
+			ctx.stroke();
+		ctx.restore();
 	}
 });
 

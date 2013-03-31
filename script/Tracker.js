@@ -4,9 +4,10 @@ function Tracker() {
     var scale = 4;
 	var gridSize = 16;
 	var grid = [];
-	this.onframe = null;
 	var _this = this;
 	var points = [];
+	var tracking = false;
+	var last = null;
 	
 	var hsv = [144, 99, 17];
 	var tol = [20, 15, 50];
@@ -93,10 +94,22 @@ function Tracker() {
 			x += grid[used[i].y][used[i].x].x;
 			y += grid[used[i].y][used[i].x].y;
 		}
+		
+		if(!sum)
+			return;
+			
 		x /= sum;
 		y /= sum;
+		x *= scale;
+		y *= scale;
 		
-		points.push({x:scale*x, y:scale*y, mass:sum});
+		if(last != null) {
+			x = 0.5 * x + 0.5 * last.x;
+			y = 0.5 * y + 0.5 * last.y;
+		}
+		last = {x:x, y:y};
+		
+		points.push({x:x, y:y, mass:sum});
 	}
 
 	function sample(buff, x, y) {
@@ -133,17 +146,24 @@ function Tracker() {
 	function process() {
 		pbuff = cap.captureImageData(cap.width() / scale, cap.height() / scale);
 		
-		findMarker();
+		if(tracking)
+			findMarker();
 		
 		if(_this.onframe)
 			_this.onframe(cap);
 		
 		setTimeout(function() {
 			window.requestAnimationFrame(process);
-			},50
+			},20
 		);
 	}
 
+	/*
+	* Public API starts here
+	*/
+
+	this.onframe = null;
+	
 	this.init=function(onstart) {
 		cap = new cam.Capture();
 		cap.start(function(cap) {
@@ -173,5 +193,9 @@ function Tracker() {
 		ret = points;
 		points = [];
 		return ret;
+	}
+	
+	this.setTracking = function(enabled) {
+		tracking = enabled;
 	}
 }
