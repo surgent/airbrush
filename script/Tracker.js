@@ -214,21 +214,26 @@ function Tracker() {
 		hsv[2] = v;
 	}
 	
-	this.setHTol = function(lower, upper) {
-		lowerTol[0] = lower;
-		upperTol[0] = upper;
+	this.setTol = function(lh, uh, ls, us, lv, uv) {
+		lowerTol[0] = lh;
+		upperTol[0] = uh;
+		lowerTol[1] = ls;
+		upperTol[1] = us;
+		lowerTol[2] = lv;
+		upperTol[2] = uv;
 	}
 	
-	this.setSTol = function(lower, upper) {
-		lowerTol[1] = lower;
-		upperTol[1] = upper;
+	this.getTol = function() {
+		return [
+			lowerTol[0],
+			upperTol[0],
+			lowerTol[1],
+			upperTol[1],
+			lowerTol[2],
+			upperTol[2]
+		];
 	}
-	
-	this.setVTol = function(lower, upper) {
-		lowerTol[2] = lower;
-		upperTol[2] = upper;
-	}
-	
+
 	this.getLoc = function() {
 		return loc;
 	}

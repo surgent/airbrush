@@ -141,3 +141,132 @@ body
    margin-right: 20px;
 
 }
+
+#configTool .config-options
+{
+   height: 300px;
+   width: 100%;
+   position: absolute;
+   top: 50%;
+   margin-top: -150px;
+   margin-left: 10px;
+}
+
+#configTool .config-options input
+{
+   border-radius: 3px;
+   -moz-border-radius: 3px;
+   -webkit-border-radius: 3px;
+   -o-border-radius: 3px;
+
+   border: 1px solid rgba(200, 200, 200, .8);
+}
+
+#configTool .config-options .bn
+{
+   margin-top: 5px;
+   cursor: pointer;
+   margin-right: 30px;
+   opacity: .5;
+   -moz-opacity: .5;
+   -webkit-opacity: .5;
+   -o-opacity: .5;
+   filter: opacity(50);
+}
+
+#configTool .config-options .bn:hover
+{
+    opacity: 1;
+   -moz-opacity: 1;
+   -webkit-opacity: 1;
+   -o-opacity: 1;
+   filter: opacity(100);
+
+}
+
+#pen-size
+{
+	position: absolute;
+	margin-left: 10px;
+}
+
+#pen-size .option
+{
+	opacity: .5;
+	-moz-opacity: .5;
+	-webkit-opacity: .5;
+	-o-opacity: .5;
+	filter: alpha(50);
+	
+	background-color: black;
+	cursor: pointer;
+	margin-top: 50px;
+	white-space: nowrap;
+}
+
+#pen-size .selected
+{
+	opacity: 1;
+	-moz-opacity: 1;
+	-webkit-opacity: 1;
+	-o-opacity: 1;
+	filter: alpha(100);
+	
+	background-color: #2af;
+}
+
+#pen-size .option:hover
+{
+	opacity: 1;
+	-moz-opacity: 1;
+	-webkit-opacity: 1;
+	-o-opacity: 1;
+	filter: alpha(100);
+}
+
+#pen-size .size1
+{
+	border-radius: 3px;
+	width: 6px;
+	height: 6px;
+}
+
+#pen-size .size2
+{
+	border-radius: 5px;
+	width: 10px;
+	height: 10px;
+}
+
+#pen-size .size3
+{
+	border-radius: 7px;
+	width: 14px;
+	height: 14px;
+}
+
+#pen-size .size4
+{
+	border-radius: 9px;
+	width: 18px;
+	height: 18px;
+}
+
+#pen-size .size5
+{
+	border-radius: 11px;
+	width: 22px;
+	height: 22px;
+}
+
+#pen-size .option .text
+{
+	margin-top: -25px;
+	margin-left: 35px;
+	visibility: hidden;
+}
+
+#pen-size .option:hover .text
+{
+	visibility: visible;
+}
