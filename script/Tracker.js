@@ -134,7 +134,7 @@ function Tracker() {
 		
 		setTimeout(function() {
 			window.requestAnimationFrame(process);
-			},20
+			},40
 		);
 	}
 

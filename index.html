@@ -1,137 +1,150 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Air Brush!</title>
+   <title>
+   </title>
+   <link rel="stylesheet" type="text/css" href="inc/style.css" ></link>
+   <link 
+      href='http://fonts.googleapis.com/css?family=Open+Sans:300' 
+      rel='stylesheet' 
+      type='text/css'>
+   <script type="text/javascript" src="script/include.js"></script>
+   <script>
+   $(window).ready(_main);
 
-<style type="text/css">
-	html, body {
-		border: 0px;
-		margin: 0px;
-		height: 100%;
-	}
-	
-	#display {
-		width: 100%;
-		height: 100%;
-		background-color: #000;
-		transform: matrix(-1,0,0,1,0,0);
-		-o-transform: matrix(-1,0,0,1,0,0);
-		-ms-transform: matrix(-1,0,0,1,0,0);
-		-moz-transform: matrix(-1,0,0,1,0,0);
-		-webkit-transform: matrix(-1,0,0,1,0,0);
-	}
-</style>
+   function cancelFullScreen(element) {
+       // Supports most browsers and their versions.
+       var requestMethod = 
+	  element.cancelFullScreen 
+	  || element.webkitCancelFullScreen 
+	  || element.mozCancelFullScreen 
+	  || element.exitFullScreen;
 
+       if (requestMethod) { // Native full screen.
+	   requestMethod.call(element);
+
+       } else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
+	   var wscript = new ActiveXObject("WScript.Shell");
+	   if (wscript !== null) {
+	       wscript.SendKeys("{Esc}");
+	   }
+       }
+   }
+
+   function requestFullScreen(element) {
+       // Supports most browsers and their versions.
+       var requestMethod = 
+	  element.requestFullScreen 
+	  || element.webkitRequestFullScreen 
+	  || element.mozRequestFullScreen 
+	  || element.msRequestFullScreen;
+
+       if (requestMethod) { // Native full screen.
+	   requestMethod.call(element);
+
+       } else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
+	   var wscript = new ActiveXObject("WScript.Shell");
+	   if (wscript !== null) {
+	       wscript.SendKeys("{F11}");
+	   }
+       }
+   }
+
+   //var elem = document.body; // Make the body go full screen.
+   //requestFullScreen(elem);
+   var canvasWidth = 800;
+   var canvasHeight = 500;
+
+   function updateCanvas()
+   {
+      var canvas = $('#display')[0];
+      canvas.width = canvasWidth;
+      canvas.height = canvasHeight;
+   }
+
+   function _main(){
+
+
+      // configure the full screen events
+      $(document.body).on('webkitfullscreenchange mozfullscreenchange fullscreenchange',
+         fullScreenTrigger);
+      updateCanvas();
+
+      $('#configTool').css('left',
+         String($('#config').offset().left) + "px");
+
+      $('#fullscreen').on('click', function()
+      {
+	 var elem = document.body; 
+
+	 requestFullScreen(elem);
+
+	 var availWidth = screen.availWidth;
+	 var availHeight = screen.availHeight;
+
+	 canvasWidth = availWidth;
+	 canvasHeight = parseInt(availHeight * .6);
+
+	 $('#display').addClass('display-full-screen');
+	 $('#fullscreen').remove();
+
+	 updateCanvas();
+      });
+
+      $('#config').on('click', function()
+	 {
+	    // expand tools
+	    $('#configTool').css('display', 'block');
+	 });
+
+      $('#configTool .button').on('click',
+         function(evt)
+	 {
+	    $('#configTool').css('display', 'none');
+	 });
+   }
+
+   function fullScreenTrigger(evt)
+   {
+      // figure out if there is a way to see if it is full screen
+
+   }
+
+
+   /*
+   */
+
+   </script>
 </head>
 <body>
 
-<canvas id="display"></canvas>
+<div class="side-logo">
+airbrush 
+</div>
 
-<script type="text/javascript" src="script/include.js"></script>
-<script type="text/javascript">
+<div id="content">
+   <!-- header -->
+   <div class='top-bar'>
+      <div id="fullscreen">
+         full screen
+         <img src="img/fullscreen.png" />
+      </div>
+      <div id="config">
+         config 
+         <img src="img/config.png" />
+      </div>
 
-var canvas = $("#display")[0];
-var ctx = canvas.getContext("2d");
-var cap;
-var lines = [];
-var down = false;
-var sampling = true;
-var color = null;
+   </div>
+   <div id="content-body">
+      <canvas id="display"></canvas>
+   </div>
 
-var track = new Tracker();
-track.init(function() {
-	cap = track.getCap();
-	canvas.width = cap.width();
-	canvas.height = cap.height();
-	$(document).on('keydown', function(evt) {
-		if(sampling)
-			return;
-	
-		if(evt.keyCode == 32) {
-			if(down)
-				return;
-				
-			track.setTracking(true);
-			lines.push([]);
-			
-			down = true;
-		}
-	})
-	$(document).on('keyup', function(evt) {
-		if(evt.keyCode == 32) {
-			if(sampling) {
-				var hsv = color.hsv;
-				track.setColor(hsv[0], hsv[1], hsv[2]);
-				sampling = false;
-				return;
-			}
-		
-			track.setTracking(false);
-			down = false;
-		}
-	})
-
-	track.onframe=function(cap) {	
-		var cx = cap.width() >> 1;
-		var cy = cap.height() >> 1;
-
-		cap.captureContext2d(ctx);
-
-		if(sampling) {
-			ctx.save();
-				color = track.sampleColor();
-				var rgb = color.rgb;
-				ctx.strokeStyle = "rgb(" + rgb.join(',') + ")";
-				ctx.lineWidth = 2;
-				ctx.strokeRect(cx - 49, cy - 49, 98, 98);
-				ctx.globalAlpha = 0.5;
-				ctx.fillRect(0, 0, canvas.width, cy - 50);
-				ctx.fillRect(0, cy-50, cx- 50, 100);
-				ctx.fillRect(0, cy+50, canvas.width, cy - 50);
-				ctx.fillRect(cx + 50, cy-50, cx- 50, 100);
-			ctx.restore();
-			
-			return;
-		}
-		
-		if(lines.length) {
-			var last = lines.length - 1;
-			lines[last] = lines[last].concat(track.getPoints());
-
-			for(var line = 0; line < lines.length; ++line) {
-				ctx.save();
-					ctx.strokeStyle="#09f";
-					ctx.lineWidth = 3;
-					ctx.beginPath();
-			
-					if(lines[line].length > 0)
-						ctx.moveTo(lines[line][0].x, lines[line][0].y);
-				
-					for(var i=1; i<lines[line].length; ++i)
-						ctx.lineTo(lines[line][i].x, lines[line][i].y);
-					
-					ctx.stroke();
-				ctx.restore();
-			}
-		}
-			
-		var loc = track.getLoc();
-		ctx.save();
-			ctx.lineWidth = 2;
-			ctx.fillStyle = "rgba(34, 255, 170, 0.5)";
-			ctx.strokeStyle = "rgba(34, 255, 170, 0.5)";
-			ctx.beginPath();
-			//ctx.moveTo(loc.x, loc.y);
-			ctx.arc(loc.x, loc.y, 8, 0, 2*Math.PI, false);
-			ctx.stroke();
-			ctx.beginPath();
-			ctx.arc(loc.x, loc.y, 4, 0, 2*Math.PI, false);
-			ctx.fill();
-		ctx.restore();
-	}
-});
-
-</script>
-
+   <div id="configTool">
+      <div class="button close">
+         close
+         <img src="img/close.png">
+      </div>
+   </div>
+</div>
 </body>
 </html>

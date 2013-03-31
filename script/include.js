@@ -2,7 +2,8 @@ var includes = [
     "cam",
 	"jquery",
 	"rgb2hsv",
-	"Tracker"
+	"Tracker",
+	"draw"
 ];
 
 for(var include in includes)
