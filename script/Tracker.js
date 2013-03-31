@@ -8,9 +8,11 @@ function Tracker() {
 	var points = [];
 	var tracking = false;
 	var last = null;
+	var loc;
 	
 	var hsv = [144, 99, 17];
-	var tol = [20, 15, 25];
+	var upperTol = [20, 15, 25];
+	var lowerTol = [20, 15, 25];
 
 	function findMarker() {
 		var p;
@@ -31,9 +33,9 @@ function Tracker() {
 				var i = y * pbuff.width * 4 + x * 4;
 				p = rgb2hsv(data[i], data[i+1], data[i+2]);
 			
-				if(hsv[0] - tol[0] < p[0] && p[0] < hsv[0] + tol[0] &&
-			   		hsv[1] - tol[1] < p[1] && p[1] < hsv[1] + tol[1] &&
-			   		hsv[2] - tol[2] < p[2] && p[2] < hsv[2] + tol[2]) {
+				if(hsv[0] - lowerTol[0] < p[0] && p[0] < hsv[0] + upperTol[0] &&
+			   		hsv[1] - lowerTol[1] < p[1] && p[1] < hsv[1] + upperTol[1] &&
+			   		hsv[2] - lowerTol[2] < p[2] && p[2] < hsv[2] + upperTol[2]) {
 					data[i] = 255;
 					data[i+1] = 255;
 			    	data[i+2] = 255;
@@ -107,9 +109,13 @@ function Tracker() {
 			x = 0.5 * x + 0.5 * last.x;
 			y = 0.5 * y + 0.5 * last.y;
 		}
-		last = {x:x, y:y};
 		
-		points.push({x:x, y:y, mass:sum});
+		loc = {x:x, y:y};
+		
+		if(tracking) {
+			last = {x:x, y:y};
+			points.push({x:x, y:y, mass:sum});
+		}
 	}
 
 	function sample(buff, x, y) {
@@ -119,35 +125,9 @@ function Tracker() {
 		return [d[o], d[o+1], d[o+2], d[o+3]];
 	}
 
-	function color() {
-		var size = 4;
-		var sx = pbuff.width/2 - size/2;
-		var sy = pbuff.height/2 - size/2;
-		var ex = sx + size;
-		var ey = sy + size;
-		var sumr = 0, sumg = 0, sumb = 0;
-		for(var y=sy; y < ey; ++y) {
-			for(var x=sx; x < ex; ++x) {
-				var smp = sample(pbuff, x, y);
-				sumr += smp[0];
-				sumg += smp[1];
-				sumb += smp[2];
-			}
-		}
-		
-		szsq = size*size;
-		sumr /= szsq;
-		sumg /= szsq;
-		sumb /= szsq;
-		
-		var hsv = rgb2hsv(sumr,sumg,sumb);
-	}
-
 	function process() {
 		pbuff = cap.captureImageData(cap.width() / scale, cap.height() / scale);
-		
-		if(tracking)
-			findMarker();
+		findMarker();
 		
 		if(_this.onframe)
 			_this.onframe(cap);
@@ -200,5 +180,56 @@ function Tracker() {
 		
 		if(!tracking)
 			last = null;
+	}
+
+	this.sampleColor = function() {
+		pbuff = cap.captureImageData(cap.width() / scale, cap.height() / scale);
+			
+		var size = 4;
+		var sx = pbuff.width/2 - size/2;
+		var sy = pbuff.height/2 - size/2;
+		var ex = sx + size;
+		var ey = sy + size;
+		var sumr = 0, sumg = 0, sumb = 0;
+		for(var y=sy; y < ey; ++y) {
+			for(var x=sx; x < ex; ++x) {
+				var smp = sample(pbuff, x, y);
+				sumr += smp[0];
+				sumg += smp[1];
+				sumb += smp[2];
+			}
+		}
+		
+		szsq = size*size;
+		sumr /= szsq;
+		sumg /= szsq;
+		sumb /= szsq;
+		
+		return {hsv:rgb2hsv(sumr,sumg,sumb), rgb:[Math.round(sumr), Math.round(sumg), Math.round(sumb)]};
+	}
+	
+	this.setColor = function(h, s, v) {
+		hsv[0] = h;
+		hsv[1] = s;
+		hsv[2] = v;
+	}
+	
+	this.setHTol = function(lower, upper) {
+		lowerTol[0] = lower;
+		upperTol[0] = upper;
+	}
+	
+	this.setSTol = function(lower, upper) {
+		lowerTol[1] = lower;
+		upperTol[1] = upper;
+	}
+	
+	this.setVTol = function(lower, upper) {
+		lowerTol[2] = lower;
+		upperTol[2] = upper;
+	}
+	
+	this.getLoc = function() {
+		return loc;
 	}
 }
