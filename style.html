@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <title>
+   </title>
+   <link rel="stylesheet" type="text/css" href="inc/style.css" ></link>
+   <script type="text/javascript" src="script/include.js"></script>
+   <script>
+   $(window).ready(_main);
+
+   function cancelFullScreen(element) {
+       // Supports most browsers and their versions.
+       var requestMethod = 
+	  element.cancelFullScreen 
+	  || element.webkitCancelFullScreen 
+	  || element.mozCancelFullScreen 
+	  || element.exitFullScreen;
+
+       if (requestMethod) { // Native full screen.
+	   requestMethod.call(element);
+
+       } else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
+	   var wscript = new ActiveXObject("WScript.Shell");
+	   if (wscript !== null) {
+	       wscript.SendKeys("{Esc}");
+	   }
+       }
+   }
+
+   function requestFullScreen(element) {
+       // Supports most browsers and their versions.
+       var requestMethod = 
+	  element.requestFullScreen 
+	  || element.webkitRequestFullScreen 
+	  || element.mozRequestFullScreen 
+	  || element.msRequestFullScreen;
+
+       if (requestMethod) { // Native full screen.
+	   requestMethod.call(element);
+
+       } else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
+	   var wscript = new ActiveXObject("WScript.Shell");
+	   if (wscript !== null) {
+	       wscript.SendKeys("{F11}");
+	   }
+       }
+   }
+
+   //var elem = document.body; // Make the body go full screen.
+   //requestFullScreen(elem);
+   var canvasWidth = 800;
+   var canvasHeight = 400;
+
+   function updateCanvas()
+   {
+      var canvas = $('#display')[0];
+      canvas.width = canvasWidth;
+      canvas.height = canvasHeight;
+   }
+
+   function _main(){
+      $('#fullscreen').on('click', function()
+      {
+	 var elem = document.body; 
+
+	 requestFullScreen(elem);
+
+	 var availWidth = screen.availWidth;
+	 var availHeight = screen.availHeight;
+
+	 canvasWidth = availWidth;
+	 canvasHeight = parseInt(availHeight * .6);
+
+	 $('#display').addClass('display-full-screen');
+	 $('#fullscreen').remove();
+
+	 updateCanvas();
+      });
+
+      // configure the full screen events
+      $(document.body).on('webkitfullscreenchange mozfullscreenchange fullscreenchange',
+         fullScreenTrigger);
+      updateCanvas();
+   }
+
+   function fullScreenTrigger(evt)
+   {
+      alert(evt.mozFullScreenElement);
+      alert(evt.webkitFullScreenElement);     
+      alert(evt.fullScreenElement);     
+   }
+
+   </script>
+</head>
+<body>
+<div id="content">
+   <!-- header -->
+   <div class='top-bar'>
+      <div id="fullscreen">
+         <img src="img/fullscreen.png" />
+      </div>
+   </div>
+
+   <div id="content-body">
+      <canvas id="display"></canvas>
+   </div>
+</div>
+</body>
+</html>
