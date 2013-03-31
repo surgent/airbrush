@@ -33,14 +33,31 @@
 var canvas = $("#display")[0];
 var ctx = canvas.getContext("2d");
 var cap;
-var pts = [];
+var lines = [];
+var down = false;
 
 var track = new Tracker();
 track.init(function() {
-	track.setTracking(true);
 	cap = track.getCap();
 	canvas.width = cap.width();
 	canvas.height = cap.height();
+	$(document).on('keydown', function(evt) {
+		if(evt.keyCode == 32) {
+			if(down)
+				return;
+				
+			track.setTracking(true);
+			lines.push([]);
+			
+			down = true;
+		}
+	})
+	$(document).on('keyup', function(evt) {
+		if(evt.keyCode == 32) {
+			track.setTracking(false);
+			down = false;
+		}
+	})
 
 	track.onframe=function(cap) {	
 		var cx = cap.width() >> 1;
@@ -55,20 +72,25 @@ track.init(function() {
 			ctx.fillRect(cx + 50, cy-50, cx- 50, 100);
 		ctx.restore();
 		
-		pts = pts.concat(track.getPoints());
+		if(lines.length) {
+			var last = lines.length - 1;
+			lines[last] = lines[last].concat(track.getPoints());
 
-		ctx.save();
-			ctx.strokeStyle="#09f";
-			ctx.beginPath();
+			for(var line = 0; line < lines.length; ++line) {
+				ctx.save();
+					ctx.strokeStyle="#09f";
+					ctx.beginPath();
 			
-			if(pts.length > 0)
-				ctx.moveTo(pts[0].x, pts[0].y);
+					if(lines[line].length > 0)
+						ctx.moveTo(lines[line][0].x, lines[line][0].y);
 				
-			for(var i=1; i<pts.length; ++i)
-				ctx.lineTo(pts[i].x, pts[i].y);
+					for(var i=1; i<lines[line].length; ++i)
+						ctx.lineTo(lines[line][i].x, lines[line][i].y);
 					
-			ctx.stroke();
-		ctx.restore();
+					ctx.stroke();
+				ctx.restore();
+			}
+		}
 	}
 });
 

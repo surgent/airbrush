@@ -10,7 +10,7 @@ function Tracker() {
 	var last = null;
 	
 	var hsv = [144, 99, 17];
-	var tol = [20, 15, 50];
+	var tol = [20, 15, 25];
 
 	function findMarker() {
 		var p;
@@ -197,5 +197,8 @@ function Tracker() {
 	
 	this.setTracking = function(enabled) {
 		tracking = enabled;
+		
+		if(!tracking)
+			last = null;
 	}
 }
