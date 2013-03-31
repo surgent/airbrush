@@ -20,12 +20,13 @@ track.init(function() {
 	canvas.width = cap.width();
 	canvas.height = cap.height();
 	$(document).on('keydown', function(evt) {
-		evt.preventDefault();
-	
+
 		if(sampling)
 			return;
 	
 		if(evt.keyCode == 32) {
+			evt.preventDefault();
+			
 			if(down)
 				return;
 				
