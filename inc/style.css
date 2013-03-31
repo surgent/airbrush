@@ -1,0 +1,77 @@
+html, body { background-color: white; min-height: 100%;
+width: 100%; margin: 0px; background: rgb(255,255,255); /* Old browsers */ background: -moz-linear-gradient(-45deg,  rgba(255,255,255,1) 0%, rgba(238,238,238,1) 47%, rgba(204,204,204,1) 100%); /* FF3.6+ */ background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(47%,rgba(238,238,238,1)), color-stop(100%,rgba(204,204,204,1))); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(-45deg,  rgba(255,255,255,1) 0%,rgba(238,238,238,1) 47%,rgba(204,204,204,1) 100%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(-45deg,  rgba(255,255,255,1) 0%,rgba(238,238,238,1) 47%,rgba(204,204,204,1) 100%); /* Opera 11.10+ */ background: -ms-linear-gradient(-45deg,  rgba(255,255,255,1) 0%,rgba(238,238,238,1) 47%,rgba(204,204,204,1) 100%); /* IE10+ */ background: linear-gradient(135deg,  rgba(255,255,255,1) 0%,rgba(238,238,238,1) 47%,rgba(204,204,204,1) 100%); /* W3C */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#cccccc',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */ }
+
+body 
+{
+   min-height: 100%;
+   margin: 0;
+   background-repeat: no-repeat;
+   background-attachment: fixed;
+}
+#content
+{
+   min-width: 640px;
+   max-width: 1000px;
+
+   margin-right: auto;
+   margin-left: auto;
+}
+
+#display
+{
+   border-radius: 5px;
+   -moz-border-radius: 5px;
+   -webkit-border-radius: 5px;
+   -o-border-radius: 5px;
+
+   background: transparent;
+   margin-top: 50px;
+}
+
+#display:hover
+{
+   background-color: rgba(255, 255, 255, .6);
+}
+
+.display-full-screen
+{
+   position: absolute;
+   left: 0px;
+}
+
+.top-bar
+{
+   display: block;
+   width: 100%;
+}
+
+.top-bar #fullscreen
+{
+   display: inline-block;
+   height: 20px;
+   margin-top: 5px;
+   margin-bottom: 5px;
+   float: right;
+   
+   opacity: .5;
+   -moz-opacity: .5;
+   -webkit-opacity: .5;
+   -o-opacity: .5;
+   filter: opacity(50);
+   margin-right: 30px;
+   cursor: pointer;
+}
+
+.top-bar img
+{
+   width: 20px;
+}
+
+.top-bar #fullscreen:hover
+{
+    opacity: 1;
+    -moz-opacity: 1;
+    -webkit-opacity: 1;
+    -o-opacity: 1;
+    filter: opacity(100);
+}
