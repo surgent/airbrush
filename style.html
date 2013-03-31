@@ -4,6 +4,10 @@
    <title>
    </title>
    <link rel="stylesheet" type="text/css" href="inc/style.css" ></link>
+   <link 
+      href='http://fonts.googleapis.com/css?family=Open+Sans:300' 
+      rel='stylesheet' 
+      type='text/css'>
    <script type="text/javascript" src="script/include.js"></script>
    <script>
    $(window).ready(_main);
@@ -49,7 +53,7 @@
    //var elem = document.body; // Make the body go full screen.
    //requestFullScreen(elem);
    var canvasWidth = 800;
-   var canvasHeight = 400;
+   var canvasHeight = 500;
 
    function updateCanvas()
    {
@@ -59,6 +63,16 @@
    }
 
    function _main(){
+
+
+      // configure the full screen events
+      $(document.body).on('webkitfullscreenchange mozfullscreenchange fullscreenchange',
+         fullScreenTrigger);
+      updateCanvas();
+
+      $('#configTool').css('left',
+         String($('#config').offset().left) + "px");
+
       $('#fullscreen').on('click', function()
       {
 	 var elem = document.body; 
@@ -77,32 +91,59 @@
 	 updateCanvas();
       });
 
-      // configure the full screen events
-      $(document.body).on('webkitfullscreenchange mozfullscreenchange fullscreenchange',
-         fullScreenTrigger);
-      updateCanvas();
+      $('#config').on('click', function()
+	 {
+	    // expand tools
+	    $('#configTool').css('display', 'block');
+	 });
+
+      $('#configTool .button').on('click',
+         function(evt)
+	 {
+	    $('#configTool').css('display', 'none');
+	 });
    }
 
    function fullScreenTrigger(evt)
    {
-      alert(evt.mozFullScreenElement);
-      alert(evt.webkitFullScreenElement);     
-      alert(evt.fullScreenElement);     
+      // figure out if there is a way to see if it is full screen
+
    }
+
+
+   /*
+   */
 
    </script>
 </head>
 <body>
+
+<div class="side-logo">
+airbrush 
+</div>
+
 <div id="content">
    <!-- header -->
    <div class='top-bar'>
       <div id="fullscreen">
+         full screen
          <img src="img/fullscreen.png" />
       </div>
-   </div>
+      <div id="config">
+         config 
+         <img src="img/config.png" />
+      </div>
 
+   </div>
    <div id="content-body">
       <canvas id="display"></canvas>
+   </div>
+
+   <div id="configTool">
+      <div class="button close">
+         close
+         <img src="img/close.png">
+      </div>
    </div>
 </div>
 </body>

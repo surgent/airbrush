@@ -7,6 +7,8 @@ body
    margin: 0;
    background-repeat: no-repeat;
    background-attachment: fixed;
+   font-family: 'Open Sans', sans-serif;
+   color: #999;
 }
 #content
 {
@@ -45,7 +47,9 @@ body
    width: 100%;
 }
 
-.top-bar #fullscreen
+.top-bar #fullscreen,
+.top-bar #config,
+#configTool .button
 {
    display: inline-block;
    height: 20px;
@@ -62,16 +66,69 @@ body
    cursor: pointer;
 }
 
-.top-bar img
+.top-bar img,
+#configTool .button img
 {
    width: 20px;
+   margin-top: -4px;
+   vertical-align: middle;
 }
 
-.top-bar #fullscreen:hover
+.top-bar #fullscreen:hover,
+.top-bar #config:hover,
+#configTool .button:hover
 {
     opacity: 1;
     -moz-opacity: 1;
     -webkit-opacity: 1;
     -o-opacity: 1;
     filter: opacity(100);
+}
+
+.side-logo
+{
+   font-weight: 300;
+   color: #999;
+   font-size: 150px;
+   position: absolute;
+   left: -220px;
+   top: 200px;
+
+   opacity: .2;
+   -moz-opacity: .2;
+   -webkit-opacity: .2;
+   -o-opacity: .2;
+   filter: opacity(20);
+
+   transform:rotate(90deg);
+   -ms-transform:rotate(90deg); /* IE 9 */
+   -moz-transform:rotate(90deg); /* Firefox */
+   -webkit-transform:rotate(90deg); /* Safari and Chrome */
+   -o-transform:rotate(90deg); /* Opera */
+
+}
+
+#configTool
+{
+   position: fixed;
+   display: none;
+   top: 0px;
+   height: 100%;
+   width: 200px;
+   background-color: white;
+   border-left: #ccc solid 1px;
+   border-right: #ccc solid 1px;
+
+   /*-moz-box-shadow:    2px 2px 3px 1px rgba(90, 90, 90, .4);
+   -webkit-box-shadow: 2px 2px 3px 1px rgba(90, 90, 90, .4);
+   box-shadow:         2px 2px 3px 1px rgba(90, 90, 90, .4);
+   */
+}
+
+#configTool .button
+{
+   margin-top: 30px;
+   float: right;
+   margin-right: 20px;
+
 }
