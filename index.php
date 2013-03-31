@@ -1,3 +1,16 @@
+<?php
+session_start();
+	global $sid;
+	if(!isset($_SESSION['uid']))
+		$_SESSION['uid'] = uniqid();
+		
+	if(!isset($_GET['u'])) {
+		$sid = uniqid();
+		header("Location: http://airbrush.surgent.org?u=$sid");
+	}
+	else
+		$sid = $_GET['u'];
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -145,6 +158,17 @@ airbrush
          <img src="img/close.png">
       </div>
    </div>
+</div>
+<div style="display: none;" id="sid">
+<?php
+	global $sid;
+	echo $sid;
+?>
+</div>
+<div style="display: none;" id="uid">
+<?php
+	echo $_SESSION['uid'];
+?>
 </div>
 </body>
 </html>

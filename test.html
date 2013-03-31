@@ -1,0 +1,30 @@
+<html>
+<html>
+	<script type="text/javascript" src="script/jquery.js">
+	</script>
+	
+	<script type="text/javascript">
+	$(window).ready(_main);
+	
+	function _main()
+	{
+		var data = 
+			{
+				'user_code' : 2,
+				'json' : '{ "my mother" : "is a man" }',
+	            'push' : '1234'
+			};
+		$.post(
+			'src/relay.php',
+			data,
+			function (data)
+			{
+				alert(data);
+			}
+		);
+	}
+	</script>
+</html>
+<body>
+</body>
+</html>

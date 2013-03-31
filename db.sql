@@ -1,0 +1,6 @@
+CREATE TABLE ab_session (
+	id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	url_code VARCHAR(20),
+	user_code VARCHAR(20),
+	json LONGTEXT
+);

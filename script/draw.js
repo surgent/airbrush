@@ -4,6 +4,7 @@ var canvas = $("#display")[0];
 var ctx = canvas.getContext("2d");
 var cap;
 var lines = [];
+var yolines = null;
 var down = false;
 var sampling = true;
 var color = null;
@@ -90,6 +91,30 @@ track.init(function() {
 				ctx.restore();
 			}
 		}
+		
+		if(yolines) {
+			console.log(yolines);
+			//var last = yolines.lines.length - 1;
+			/*
+			lines[last] = lines[last].concat(track.getPoints());
+
+			for(var line = 0; line < lines.length; ++line) {
+				ctx.save();
+					ctx.strokeStyle="#09f";
+					ctx.lineWidth = 3;
+					ctx.beginPath();
+			
+					if(lines[line].length > 0)
+						ctx.moveTo(lines[line][0].x, lines[line][0].y);
+				
+					for(var i=1; i<lines[line].length; ++i)
+						ctx.lineTo(lines[line][i].x, lines[line][i].y);
+					
+					ctx.stroke();
+				ctx.restore();
+			}
+			*/
+		}
 			
 		var loc = track.getLoc();
 		ctx.save();
@@ -101,5 +126,49 @@ track.init(function() {
 		ctx.restore();
 	}
 });
+
+setInterval(function() {
+	var sid = $('#sid').html().replace(/\s*/, "");
+	var uid = $('#uid').html().replace(/\s*/, "");
+	var json = JSON.stringify({
+			lines: lines,
+			color: "#000",
+			width: 1
+		});
+	
+	var postData = 
+		{
+			'user_code' : uid,
+			'json' : json,
+	        'push' : sid
+		};
+		
+	$.post(
+		'src/relay.php',
+		postData
+	);
+	
+	var getData = { 'pull' : sid };
+	$.getJSON(
+		'src/relay.php',
+		getData,
+		function(data)
+		{
+			var entries = data.data;
+			if(entries.length > 1)
+			{
+				var user1Data = entries[0];
+				yolines = (entries[0].usercode != uid)? 
+					entries[0].json : entries[1].json;
+			}
+			else
+			{
+				yolines = (entries[0].usercode != uid)? entries[0].json : [];
+			}
+			console.log(yolines);
+			
+		}
+	);
+},1000);
 
 });
