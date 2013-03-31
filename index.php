@@ -80,6 +80,9 @@ session_start();
    	$('#pen-size').css('left', 
    		String($('#display').offset().left + $('#display').width()) + "px");
    	$('#pen-size').css('top',"42px");
+   	$('#erase').css('left',
+   		String($('#display').offset().left + $('#display').width() + 10) + "px");
+   	$('#erase').css('top', "280px");
    	
       // configure the full screen events
       $(document.body).on('webkitfullscreenchange mozfullscreenchange fullscreenchange',
@@ -229,7 +232,7 @@ airbrush
 				</div>
 			</div>
 		</div>
-
+		<div><img id="erase" src="img/eraser.png" onclick="lines=[];"/></div>
    </div>
 
    <div id="configTool">

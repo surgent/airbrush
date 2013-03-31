@@ -270,3 +270,21 @@ body
 {
 	visibility: visible;
 }
+
+#erase {
+	position: absolute;
+	cursor: pointer;
+	opacity: .5;
+	-moz-opacity: .5;
+	-webkit-opacity: .5;
+	-o-opacity: .5;
+	filter: alpha(50);
+}
+
+#erase:hover {
+	opacity: 1;
+	-moz-opacity: 1;
+	-webkit-opacity: 1;
+	-o-opacity: 1;
+	filter: alpha(100);
+}

@@ -1,12 +1,13 @@
 var track;
 var lineWidth;
+var lines;
 
 $(document).ready(function() {
 
 var canvas = $("#display")[0];
 var ctx = canvas.getContext("2d");
 var cap;
-var lines = [];
+lines = [];
 var yolines = null;
 lineWidth = 3;
 var down = false;
